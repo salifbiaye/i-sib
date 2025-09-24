@@ -20,35 +20,59 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 
-export const description = "An area chart with a legend"
-
-const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-]
+interface UserGrowthChartProps {
+  weeklyGrowth: {
+    [key: string]: number
+  }
+  monthlyTrend: {
+    [key: string]: number
+  }
+  growthRate: number
+}
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  weekly: {
+    label: "Hebdomadaire",
     color: "var(--chart-1)",
   },
-  mobile: {
-    label: "Mobile",
+  monthly: {
+    label: "Mensuel",
     color: "var(--chart-2)",
   },
 } satisfies ChartConfig
 
-export function ChartAreaLegend() {
+export function UserGrowthChart({ weeklyGrowth, monthlyTrend, growthRate }: UserGrowthChartProps) {
+  // Utiliser directement toutes les données du JSON
+  const weeklyData = Object.entries(weeklyGrowth).map(([date, count]) => ({
+    period: date,
+    weekly: count,
+    type: 'weekly'
+  }))
+
+  const monthlyData = Object.entries(monthlyTrend).map(([date, count]) => ({
+    period: date,
+    monthly: count,
+    type: 'monthly'
+  }))
+
+  // Utiliser directement les données du JSON
+  const chartData = weeklyData.slice(-7).map(item => {
+    const currentMonth = "09/2025"
+    const monthValue = monthlyData.find(m => m.period === currentMonth)?.monthly || 0
+
+    return {
+      period: item.period,
+      weekly: item.weekly,
+      monthly: monthValue
+    }
+  })
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Area Chart - Legend</CardTitle>
+        <CardTitle>Croissance des Utilisateurs</CardTitle>
         <CardDescription>
-          Showing total visitors for the last 6 months
+          Évolution hebdomadaire et tendance mensuelle
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -63,30 +87,29 @@ export function ChartAreaLegend() {
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="month"
+              dataKey="period"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
             />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent indicator="line" />}
             />
             <Area
-              dataKey="mobile"
+              dataKey="monthly"
               type="natural"
-              fill="var(--color-mobile)"
+              fill="var(--color-monthly)"
               fillOpacity={0.4}
-              stroke="var(--color-mobile)"
+              stroke="var(--color-monthly)"
               stackId="a"
             />
             <Area
-              dataKey="desktop"
+              dataKey="weekly"
               type="natural"
-              fill="var(--color-desktop)"
+              fill="var(--color-weekly)"
               fillOpacity={0.4}
-              stroke="var(--color-desktop)"
+              stroke="var(--color-weekly)"
               stackId="a"
             />
             <ChartLegend content={<ChartLegendContent />} />
@@ -97,10 +120,18 @@ export function ChartAreaLegend() {
         <div className="flex w-full items-start gap-2 text-sm">
           <div className="grid gap-2">
             <div className="flex items-center gap-2 leading-none font-medium">
-              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+              {growthRate > 0 ? (
+                <>
+                  Croissance de {growthRate.toFixed(1)}% <TrendingUp className="h-4 w-4" />
+                </>
+              ) : (
+                <>
+                  Taux de croissance stable <TrendingUp className="h-4 w-4" />
+                </>
+              )}
             </div>
             <div className="text-muted-foreground flex items-center gap-2 leading-none">
-              January - June 2024
+              Hebdomadaire vs tendance mensuelle
             </div>
           </div>
         </div>

@@ -13,7 +13,7 @@ import { useApiGet } from "@/hooks/use-api"
 import defaultApiProxy from "@/lib/api-proxy"
 import { toast } from "@/lib/toast"
 import { UserCreateModal, UserEditModal, UserDeleteModal } from "./user-modals"
-import { getUserTypeBadgeVariant } from "../types/user-types"
+import { getUserTypeBadgeVariant, getUserTypeConfig } from "../types/user-types"
 import { Plus } from "lucide-react"
 
 interface User {
@@ -131,22 +131,26 @@ export function UsersDataTable({ initialData }: UsersDataTableProps) {
         if (Array.isArray(value)) {
           return (
             <div className="flex flex-wrap gap-1">
-              {value.map((type, index) => (
-                <Badge
-                  key={index}
-                  variant={getUserTypeBadgeVariant(type)}
-                  className="font-medium text-xs"
-                >
-                  {type}
-                </Badge>
-              ))}
+              {value.map((type, index) => {
+                const config = getUserTypeConfig(type)
+                return (
+                  <Badge
+                    key={index}
+                    variant={config.badgeVariant}
+                    className="font-medium text-xs"
+                  >
+                    {config.label}
+                  </Badge>
+                )
+              })}
             </div>
           )
         }
         // Rétrocompatibilité pour les strings
+        const config = getUserTypeConfig(value)
         return (
-          <Badge variant={getUserTypeBadgeVariant(value)} className="font-medium">
-            {value}
+          <Badge variant={config.badgeVariant} className="font-medium">
+            {config.label}
           </Badge>
         )
       }

@@ -51,6 +51,8 @@ export async function createUser(userData: CreateUserData) {
       typeUser: Array.isArray(userData.typeUser) ? userData.typeUser[0] : userData.typeUser
     };
 
+    console.log('📤 Sending to backend:', JSON.stringify(backendData, null, 2));
+
     await serverPost('/api/users', backendData);
 
     console.log('🔄 Revalidating path: /users (create)');

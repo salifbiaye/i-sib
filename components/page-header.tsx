@@ -1,6 +1,6 @@
 "use client"
 
-import { RiPlayLine } from "@remixicon/react"
+import { RiDashboardLine } from "@remixicon/react"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
 import {
@@ -39,17 +39,17 @@ export function PageHeader({
 }: PageHeaderProps) {
   // Trouver l'icône du module dans nav-config
   const findModuleIcon = (code?: string) => {
-    if (!code) return "RiPlayLine"
+    if (!code) return "RiDashboardLine"
 
     for (const group of NAV_CONFIG.navMain) {
       const item = group.items.find(item => item.moduleCode === code)
       if (item?.icon) return item.icon
     }
-    return "RiPlayLine"
+    return "RiDashboardLine"
   }
 
   const iconName = findModuleIcon(moduleCode)
-  const IconComponent = ICON_MAP[iconName] || RiPlayLine
+  const IconComponent = ICON_MAP[iconName] || RiDashboardLine
 
   // Breadcrumbs par défaut si non fournis
   const defaultBreadcrumbs: BreadcrumbItem[] = [

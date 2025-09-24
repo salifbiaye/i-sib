@@ -16,7 +16,7 @@ export const USER_TYPES = {
     value: "CUSTOMER",
     label: "Client",
     description: "Client/Utilisateur client",
-    badgeVariant: "outline" as const
+    badgeVariant: "secondary" as const
   }
 } as const
 

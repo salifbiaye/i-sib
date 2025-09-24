@@ -12,6 +12,9 @@ import { createUser, updateUser, deleteUser } from "../actions/user-actions"
 import { USER_TYPE_OPTIONS } from "../types/user-types"
 import { toast } from "@/lib/toast"
 
+// Options pour les modales (sans CUSTOMER)
+const MODAL_USER_TYPE_OPTIONS = USER_TYPE_OPTIONS.filter(type => type.value !== 'CUSTOMER')
+
 interface User {
   id: string
   username: string
@@ -157,12 +160,12 @@ export function UserCreateModal({ isOpen, onClose, onRefresh }: UserCreateModalP
 
       <div className="space-y-2">
         <Label htmlFor="typeUser">Type d'utilisateur</Label>
-        <Select name="typeUser" defaultValue={formData.typeUser[0] || "USER"} disabled>
+        <Select name="typeUser" defaultValue={formData.typeUser[0] || "USER"} >
           <SelectTrigger className="bg-muted cursor-not-allowed">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            {USER_TYPE_OPTIONS.map((type) => (
+            {MODAL_USER_TYPE_OPTIONS.map((type) => (
               <SelectItem key={type.value} value={type.value}>
                 {type.label}
               </SelectItem>
